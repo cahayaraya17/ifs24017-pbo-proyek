@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Masuk - PixelGallery</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5 col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-camera-fill text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="mt-2 fw-bold">Selamat Datang</h4>
+                        <p class="text-muted small">Masuk ke PixelGallery</p>
+                    </div>
+
+                    <form th:action="@{/auth/login/post}" method="post" th:object="${loginForm}">
+                        
+                        <!-- Alert Error Global -->
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger text-center small">
+                            <span th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
+                        </div>
+                        
+                        <!-- Alert Sukses (dari Register) -->
+                        <div th:if="${success}" class="alert alert-success text-center small" th:text="${success}"></div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label small text-uppercase fw-bold text-muted">Email</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}" 
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="nama@email.com">
+                            <div class="invalid-feedback" th:errors="*{email}"></div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label small text-uppercase fw-bold text-muted">Kata Sandi</label>
+                            <input type="password" class="form-control" id="password" th:field="*{password}"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="******">
+                            <div class="invalid-feedback" th:errors="*{password}"></div>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" th:field="*{rememberMe}">
+                            <label class="form-check-label small" for="rememberMe">Ingat saya</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary fw-bold">Masuk</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    
+                    <div class="text-center small">
+                        Belum punya akun? <a th:href="@{/auth/register}" class="text-decoration-none fw-bold">Daftar sekarang</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

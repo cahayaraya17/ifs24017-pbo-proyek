@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/main}">
+<head>
+    <title th:text="${photoId == null ? 'Upload Foto Baru' : 'Edit Informasi Foto'}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0" th:text="${photoId == null ? 'Upload Karya Baru' : 'Edit Informasi Karya'}">Form</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Action dinamis tergantung Add atau Edit -->
+                    <form th:action="${photoId == null ? '/photos/store' : '/photos/' + photoId + '/update'}" 
+                          th:object="${photoForm}" 
+                          method="post" 
+                          enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label class="form-label">Judul Karya</label>
+                            <input type="text" th:field="*{title}" class="form-control" 
+                                   th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{title}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select th:field="*{category}" class="form-select" th:classappend="${#fields.hasErrors('category')} ? 'is-invalid'">
+                                    <option value="" disabled selected>Pilih Kategori</option>
+                                    <option value="Portrait">Portrait</option>
+                                    <option value="Landscape">Landscape</option>
+                                    <option value="Street">Street Photography</option>
+                                    <option value="Macro">Macro</option>
+                                    <option value="Abstract">Abstract</option>
+                                </select>
+                                <div class="invalid-feedback" th:errors="*{category}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Harga Jual (IDR)</label>
+                                <input type="number" th:field="*{price}" class="form-control" 
+                                       th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{price}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Deskripsi</label>
+                            <textarea th:field="*{description}" class="form-control" rows="4"></textarea>
+                        </div>
+
+                        <!-- Input File hanya muncul saat Create -->
+                        <div class="mb-4" th:if="${photoId == null}">
+                            <label class="form-label">File Foto</label>
+                            <input type="file" th:field="*{file}" class="form-control" accept="image/*"
+                                   th:classappend="${#fields.hasErrors('file')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{file}"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/photos}" class="btn btn-secondary">Batal</a>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

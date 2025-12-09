@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/main}">
+<head>
+    <title>Detail Foto</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <a th:href="@{/photos}" class="btn btn-secondary mb-3">&larr; Kembali</a>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card shadow">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <img th:src="@{'/uploads/' + ${photo.filename}}" 
+                     class="img-fluid rounded-start w-100" 
+                     style="height: 100%; object-fit: cover; min-height: 400px;" 
+                     alt="...">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold" th:text="${photo.title}">Judul</h2>
+                    <span class="badge bg-primary mb-3" th:text="${photo.category}">Kategori</span>
+                    
+                    <p class="card-text text-muted">
+                        <small>Diunggah: <span th:text="${#temporals.format(photo.createdAt, 'dd MMMM yyyy')}"></span></small>
+                    </p>
+
+                    <h3 class="text-success mb-3">Rp <span th:text="${#numbers.formatDecimal(photo.price, 0, 'COMMA', 0, 'POINT')}"></span></h3>
+                    
+                    <p class="card-text" th:text="${photo.description}">Deskripsi lengkap...</p>
+
+                    <hr>
+                    <!-- Fitur Ubah Data Gambar -->
+                    <h5>Ganti Gambar</h5>
+                    <form th:action="@{'/photos/' + ${photo.id} + '/update-image'}" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                        <input type="file" name="file" class="form-control" accept="image/*" required>
+                        <button type="submit" class="btn btn-outline-dark">Upload</button>
+                    </form>
+                    
+                    <div class="mt-4">
+                        <a th:href="@{'/photos/' + ${photo.id} + '/edit'}" class="btn btn-warning w-100 mb-2">Ubah Informasi Teks</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
