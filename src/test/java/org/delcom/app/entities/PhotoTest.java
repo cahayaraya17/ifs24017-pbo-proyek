@@ -3,6 +3,7 @@ package org.delcom.app.entities;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit; // Import penting
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,29 +58,42 @@ class PhotoTest {
     @Test
     void testPrePersist() {
         Photo photo = new Photo(USER_ID, TITLE, CATEGORY, DESCRIPTION, PRICE);
-        // Call onCreate manually
+        
+        // Panggil onCreate secara manual
         photo.onCreate();
 
         assertNotNull(photo.getCreatedAt());
         assertNotNull(photo.getUpdatedAt());
+        
+        // 1. Pastikan created dan updated identik saat pembuatan awal
         assertEquals(photo.getCreatedAt(), photo.getUpdatedAt());
+
+        // 2. [PERBAIKAN] Validasi Rentang Waktu
+        // Memastikan waktu pembuatan adalah "barusan" (toleransi 1 detik)
+        LocalDateTime now = LocalDateTime.now();
+        long diff = ChronoUnit.SECONDS.between(photo.getCreatedAt(), now);
+
+        assertTrue(Math.abs(diff) < 1, "CreatedAt harusnya waktu sekarang (toleransi 1 detik)");
     }
 
     @Test
     void testPreUpdate() throws InterruptedException {
         Photo photo = new Photo(USER_ID, TITLE, CATEGORY, DESCRIPTION, PRICE);
-        photo.onCreate();
+        photo.onCreate(); // Set waktu awal
 
         LocalDateTime initialCreatedAt = photo.getCreatedAt();
         LocalDateTime initialUpdatedAt = photo.getUpdatedAt();
 
-        // Sleep to ensure time difference
+        // Jeda waktu agar terlihat perbedaannya (50ms cukup)
         Thread.sleep(50);
 
-        photo.onUpdate();
+        photo.onUpdate(); // Update waktu
 
-        assertEquals(initialCreatedAt, photo.getCreatedAt()); // CreatedAt should not change
-        assertNotEquals(initialUpdatedAt, photo.getUpdatedAt()); // UpdatedAt should change
-        assertTrue(photo.getUpdatedAt().isAfter(initialUpdatedAt));
+        // Validasi
+        assertEquals(initialCreatedAt, photo.getCreatedAt(), "CreatedAt tidak boleh berubah");
+        assertNotEquals(initialUpdatedAt, photo.getUpdatedAt(), "UpdatedAt harus berubah");
+        
+        // Pastikan updated baru lebih 'tua' (after) dari updated lama
+        assertTrue(photo.getUpdatedAt().isAfter(initialUpdatedAt), "UpdatedAt baru harus setelah yang lama");
     }
 }
