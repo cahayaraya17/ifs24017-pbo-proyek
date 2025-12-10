@@ -1,47 +1,33 @@
 package org.delcom.app.entities;
 
-import java.io.Serializable; // Tambahkan import ini
+import jakarta.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-@JsonPropertyOrder({ "id", "name", "email", "createdAt", "updatedAt" })
-@JsonInclude(JsonInclude.Include.NON_NULL)
-// Tambahkan 'implements Serializable'
 public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L; // Tambahkan version ID
+    // Perbaikan: Tambahkan serialVersionUID
+    private static final long serialVersionUID = 1L; 
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    public User() {
-    }
-
-    public User(String email, String password) {
-        this("", email, password);
-    }
+    public User() {}
 
     public User(String name, String email, String password) {
         this.name = name;
@@ -49,7 +35,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    // Getter & Setter tetap sama...
+    // Getters and Setters (Pastikan ID bertipe UUID)
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getName() { return name; }
@@ -59,16 +45,5 @@ public class User implements Serializable {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

@@ -86,8 +86,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
-        // String method = request.getMethod();
-
         // Endpoint public yang tidak perlu auth
         return path.startsWith("/api/auth") || path.equals("/error");
     }

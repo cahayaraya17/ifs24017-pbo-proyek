@@ -2,81 +2,92 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/main}">
 <head>
     <title>Dashboard - PixelGallery</title>
-</head>
+    
+    </head>
 <body>
 <div layout:fragment="content">
     
-    <!-- Welcome Banner -->
-    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
-        <div class="container-fluid py-3">
-            <h1 class="display-5 fw-bold">Halo, <span th:text="${user != null ? user.name : 'Fotografer'}">User</span>!</h1>
-            <p class="col-md-8 fs-4">Selamat datang kembali di PixelGallery. Kelola portofolio fotografimu dan pantau perkembangan karyamu di sini.</p>
-            <a class="btn btn-primary btn-lg" th:href="@{/photos/create}" role="button">
-                <i class="bi bi-camera-fill me-2"></i>Upload Karya Baru
+    <div class="p-5 mb-5 rounded-3 shadow-sm" style="background-color: #0d253f; color: white;">
+        <div class="container-fluid py-2">
+            <h1 class="fw-bold mb-3">Halo, <span th:text="${user != null ? user.name : 'uiaa'}">User</span>!</h1>
+            <p class="col-md-8 fs-5 mb-4 opacity-75">Selamat datang kembali di PixelGallery. Kelola portofolio fotografimu dan pantau perkembangan karyamu di sini.</p>
+            
+            <a class="btn btn-lg px-4 py-2" th:href="@{/photos/create}" role="button" 
+               style="background-color: #608fb3; color: white; border: none; font-weight: 500;">
+                <i class="bi bi-upload me-2"></i>Upload Karya Baru
             </a>
         </div>
     </div>
 
-    <!-- Statistik Cards -->
     <div class="row g-4 mb-5">
         
-        <!-- Card 1: Total Foto -->
         <div class="col-md-4">
-            <div class="card text-white bg-primary h-100 shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="card h-100 border-0 shadow-sm" style="background-color: #163b5c; color: white;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-uppercase mb-2 opacity-75">Total Karya</h6>
-                            <h2 class="display-4 fw-bold mb-0" th:text="${totalPhotos}">0</h2>
+                            <h6 class="text-uppercase mb-3 opacity-75" style="font-size: 0.85rem; letter-spacing: 1px;">Total Karya</h6>
+                            <h2 class="display-4 fw-normal mb-0" th:text="${totalPhotos}">0</h2>
                         </div>
-                        <i class="bi bi-images" style="font-size: 3rem; opacity: 0.5;"></i>
+                        <div class="rounded p-2" style="background-color: rgba(255,255,255,0.1);">
+                            <i class="bi bi-image" style="font-size: 1.5rem; color: #a4cce3;"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer bg-primary border-0">
-                    <a th:href="@{/photos}" class="text-white text-decoration-none small">Lihat Detail &rarr;</a>
+                    
+                    <div class="mt-4">
+                         <a th:href="@{/photos}" class="text-white text-decoration-none small opacity-75 hover-opacity-100">
+                            Lihat Detail &rarr;
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card 2: Total Kategori -->
         <div class="col-md-4">
-            <div class="card text-white bg-success h-100 shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="card h-100 border-0 shadow-sm" style="background-color: #163b5c; color: white;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-uppercase mb-2 opacity-75">Genre / Kategori</h6>
-                            <h2 class="display-4 fw-bold mb-0" th:text="${totalCategories}">0</h2>
+                            <h6 class="text-uppercase mb-3 opacity-75" style="font-size: 0.85rem; letter-spacing: 1px;">Genre / Kategori</h6>
+                            <h2 class="display-4 fw-normal mb-0" th:text="${totalCategories}">0</h2>
                         </div>
-                        <i class="bi bi-tags-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                        <div class="rounded p-2" style="background-color: rgba(255,255,255,0.1);">
+                            <i class="bi bi-tags" style="font-size: 1.5rem; color: #a4cce3;"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer bg-success border-0">
-                    <a th:href="@{/photos/chart}" class="text-white text-decoration-none small">Lihat Grafik &rarr;</a>
+                    
+                    <div class="mt-4">
+                         <a th:href="@{/photos/chart}" class="text-white text-decoration-none small opacity-75 hover-opacity-100">
+                            Lihat Grafik &rarr;
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card 3: Nilai Aset -->
         <div class="col-md-4">
-            <div class="card text-white bg-info h-100 shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="card h-100 border-0 shadow-sm" style="background-color: #163b5c; color: white;">
+                <div class="card-body p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-uppercase mb-2 opacity-75">Nilai Portofolio</h6>
-                            <h3 class="fw-bold mb-0">
+                            <h6 class="text-uppercase mb-3 opacity-75" style="font-size: 0.85rem; letter-spacing: 1px;">Nilai Portofolio</h6>
+                            <h2 class="display-4 fw-normal mb-0">
                                 Rp <span th:text="${#numbers.formatDecimal(totalPortfolioValue, 0, 'COMMA', 0, 'POINT')}">0</span>
-                            </h3>
+                            </h2>
                         </div>
-                        <i class="bi bi-cash-stack" style="font-size: 3rem; opacity: 0.5;"></i>
+                        <div class="rounded p-2" style="background-color: rgba(255,255,255,0.1);">
+                            <i class="bi bi-graph-up-arrow" style="font-size: 1.5rem; color: #a4cce3;"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer bg-info border-0">
-                    <small class="text-white opacity-75">Estimasi total harga jual karya</small>
+                    
+                    <div class="mt-4">
+                         <small class="text-white opacity-75">Estimasi total harga jual karya</small>
+                    </div>
                 </div>
             </div>
         </div>
+        
     </div>
-
 </div>
 </body>
 </html>
