@@ -25,6 +25,7 @@ public class SecurityConfig {
                     }
                 }))
             .authorizeHttpRequests(auth -> auth
+                // TAMBAHKAN: "/error", "/favicon.ico", "/uploads/**" di sini
                 .requestMatchers(
                     "/auth/**", 
                     "/assets/**", 
@@ -40,10 +41,10 @@ public class SecurityConfig {
 
             .formLogin(form -> form.disable())
             .logout(logout -> logout
-                .logoutUrl("/auth/logout") 
+                .logoutUrl("/auth/logout") // Pastikan URL logout jelas
                 .logoutSuccessUrl("/auth/login")
-                .invalidateHttpSession(true) 
-                .deleteCookies("JSESSIONID") 
+                .invalidateHttpSession(true) // Hapus sesi saat logout
+                .deleteCookies("JSESSIONID") // Hapus cookies
                 .permitAll())
             .rememberMe(remember -> remember
                 .key("uniqueAndSecret")

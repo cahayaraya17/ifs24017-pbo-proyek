@@ -4,23 +4,20 @@ import java.util.UUID;
 
 import org.delcom.app.entities.User;
 import org.delcom.app.repositories.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder; // Asumsi menggunakan PasswordEncoder
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // Asumsi diinject
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public User createUser(String name, String email, String password) {
-        User user = new User(name, email, passwordEncoder.encode(password)); // Encode password
+        User user = new User(name, email, password);
         return userRepository.save(user);
     }
 
@@ -49,7 +46,8 @@ public class UserService {
         if (user == null) {
             return null;
         }
-        user.setPassword(passwordEncoder.encode(newPassword)); // Encode password baru
+        user.setPassword(newPassword);
         return userRepository.save(user);
     }
+
 }

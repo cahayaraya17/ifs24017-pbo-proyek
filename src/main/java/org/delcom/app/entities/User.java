@@ -1,33 +1,47 @@
 package org.delcom.app.entities;
 
-import jakarta.persistence.*;
-import java.io.Serializable;
+import java.io.Serializable; // Tambahkan import ini
 import java.time.LocalDateTime;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
+@JsonPropertyOrder({ "id", "name", "email", "createdAt", "updatedAt" })
+@JsonInclude(JsonInclude.Include.NON_NULL)
+// Tambahkan 'implements Serializable'
 public class User implements Serializable {
-    // Perbaikan: Tambahkan serialVersionUID
-    private static final long serialVersionUID = 1L; 
+
+    private static final long serialVersionUID = 1L; // Tambahkan version ID
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    public User() {}
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    public User() {
+    }
+
+    public User(String email, String password) {
+        this("", email, password);
+    }
 
     public User(String name, String email, String password) {
         this.name = name;
@@ -35,7 +49,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    // Getters and Setters (Pastikan ID bertipe UUID)
+    // Getter & Setter tetap sama...
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getName() { return name; }
@@ -45,5 +59,16 @@ public class User implements Serializable {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

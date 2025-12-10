@@ -1,73 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title layout:title-pattern="$CONTENT_TITLE - PixelGallery">PixelGallery</title>
-    
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
-    <style>
-        body {
-            background-color: #102b47; /* Latar belakang utama biru gelap */
-            color: #e0e6ed; /* Warna teks default putih keabuan */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .navbar-custom {
-            background-color: #0d253f; /* Warna navbar sedikit lebih gelap */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        /* ... (CSS untuk link dan tombol logout) ... */
-
-        footer {
-            background-color: #0d253f;
-            border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - PixelGallery">PixelGallery</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 bg-light">
 
-        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/}">
-                <i class="bi bi-camera me-2"></i>
-                <span>PixelGallery</span>
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto ms-lg-4">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/photos}">Galeri Saya</a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <a th:href="@{/auth/logout}" class="btn btn-outline-light btn-sm rounded-pill px-3">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">
+                <i class="bi bi-camera-fill me-2"></i>PixelGallery
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/photos}">Galeri Saya</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a th:href="@{/auth/logout}" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <main class="container py-5 flex-grow-1">
-        <div layout:fragment="content">
-                    </div>
-    </main>
+    <!-- Main Content -->
+    <main class="container py-5 flex-grow-1">
+        <div layout:fragment="content">
+            <!-- Konten halaman akan masuk di sini -->
+        </div>
+    </main>
 
-        <footer class="py-4 mt-auto">
-        <div class="container text-center">
-            <small class="opacity-50">&copy; 2025 PixelGallery. Built with Spring Boot.</small>
-        </div>
-    </footer>
+    <!-- Footer -->
+    <footer class="bg-white py-4 mt-auto border-top">
+        <div class="container text-center text-muted">
+            <small>&copy; 2025 PixelGallery. Built with Spring Boot.</small>
+        </div>
+    </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
