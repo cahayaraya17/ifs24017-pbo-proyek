@@ -9,7 +9,7 @@
 ### 29-10-2025
 
 - Melakukan inisialisasi proyek
-
+- ok
 
 ## Syntax
 
