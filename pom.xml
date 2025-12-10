@@ -31,6 +31,13 @@
 	</properties>
 
 	<dependencies>
+		<!-- Dependency for JUnit Jupiter Engine -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Dependency for JUnit Vintage Engine -->
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
