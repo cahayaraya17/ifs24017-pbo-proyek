@@ -4,12 +4,14 @@ import org.delcom.app.entities.Photo;
 import org.delcom.app.repositories.PhotoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class PhotoServiceTest {
 
     @Mock
@@ -26,85 +29,181 @@ class PhotoServiceTest {
     @InjectMocks
     private PhotoService photoService;
 
+    private Photo samplePhoto;
+    private UUID photoId;
+    private UUID userId;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        photoId = UUID.randomUUID();
+        userId = UUID.randomUUID();
+        
+        // Inisialisasi objek Photo standar untuk pengujian
+        samplePhoto = new Photo();
+        samplePhoto.setId(photoId);
+        samplePhoto.setUserId(userId);
+        samplePhoto.setTitle("Original Title");
+        samplePhoto.setCategory("Nature");
+        samplePhoto.setDescription("Original Desc");
+        samplePhoto.setPrice(new BigDecimal("100.00"));
+        samplePhoto.setFilename("original.jpg");
     }
 
     @Test
     void testGetAllPhotos() {
         // Given
-        UUID userId = UUID.randomUUID();
-        Photo photo1 = new Photo(userId, "Photo 1", "Landscape", "Desc 1", new BigDecimal("100.00"));
-        Photo photo2 = new Photo(userId, "Photo 2", "Portrait", "Desc 2", new BigDecimal("200.00"));
-        List<Photo> photos = Arrays.asList(photo1, photo2);
-        when(photoRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(photos);
+        List<Photo> photoList = Collections.singletonList(samplePhoto);
+        when(photoRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(photoList);
 
         // When
         List<Photo> result = photoService.getAllPhotos(userId);
 
         // Then
-        assertEquals(2, result.size());
-        assertEquals("Photo 1", result.get(0).getTitle());
-        assertEquals("Photo 2", result.get(1).getTitle());
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(samplePhoto.getTitle(), result.get(0).getTitle());
         verify(photoRepository, times(1)).findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     @Test
     void testGetPhotoById_Found() {
         // Given
-        UUID photoId = UUID.randomUUID();
-        Photo photo = new Photo(UUID.randomUUID(), "Test Photo", "Category", "Description", new BigDecimal("150.00"));
-        when(photoRepository.findById(photoId)).thenReturn(Optional.of(photo));
+        when(photoRepository.findById(photoId)).thenReturn(Optional.of(samplePhoto));
 
         // When
-        Photo found = photoService.getPhotoById(photoId);
+        Photo result = photoService.getPhotoById(photoId);
 
         // Then
-        assertNotNull(found);
-        assertEquals(photo, found);
+        assertNotNull(result);
+        assertEquals(photoId, result.getId());
         verify(photoRepository, times(1)).findById(photoId);
     }
 
     @Test
     void testGetPhotoById_NotFound() {
         // Given
-        UUID photoId = UUID.randomUUID();
         when(photoRepository.findById(photoId)).thenReturn(Optional.empty());
 
         // When
-        Photo found = photoService.getPhotoById(photoId);
+        Photo result = photoService.getPhotoById(photoId);
 
         // Then
-        assertNull(found);
+        assertNull(result);
         verify(photoRepository, times(1)).findById(photoId);
     }
 
     @Test
     void testCreatePhoto() {
         // Given
-        UUID userId = UUID.randomUUID();
-        Photo photo = new Photo(userId, "New Photo", "Nature", "Beautiful", new BigDecimal("300.00"));
-        when(photoRepository.save(photo)).thenReturn(photo);
+        when(photoRepository.save(samplePhoto)).thenReturn(samplePhoto);
 
         // When
-        Photo saved = photoService.createPhoto(photo);
+        Photo result = photoService.createPhoto(samplePhoto);
 
         // Then
-        assertNotNull(saved);
-        assertEquals("New Photo", saved.getTitle());
-        verify(photoRepository, times(1)).save(photo);
+        assertNotNull(result);
+        assertEquals("Original Title", result.getTitle());
+        verify(photoRepository, times(1)).save(samplePhoto);
     }
 
     @Test
-    void testDeleteById() {
+    void testUpdatePhotoData_Success() {
         // Given
-        UUID photoId = UUID.randomUUID();
+        String newTitle = "Updated Title";
+        String newCategory = "Abstract";
+        String newDesc = "Updated Description";
+        BigDecimal newPrice = new BigDecimal("250.00");
+
+        when(photoRepository.findById(photoId)).thenReturn(Optional.of(samplePhoto));
+        // Mock save untuk mengembalikan objek yang sama (yang sudah dimodifikasi di service)
+        when(photoRepository.save(any(Photo.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
-        photoService.deleteById(photoId);
+        Photo updatedPhoto = photoService.updatePhotoData(photoId, newTitle, newCategory, newDesc, newPrice);
+
+        // Then
+        assertNotNull(updatedPhoto);
+        assertEquals(newTitle, updatedPhoto.getTitle());
+        assertEquals(newCategory, updatedPhoto.getCategory());
+        assertEquals(newDesc, updatedPhoto.getDescription());
+        assertEquals(newPrice, updatedPhoto.getPrice());
+        
+        // Verifikasi bahwa filename TIDAK berubah
+        assertEquals("original.jpg", updatedPhoto.getFilename());
+        
+        verify(photoRepository, times(1)).findById(photoId);
+        verify(photoRepository, times(1)).save(samplePhoto);
+    }
+
+    @Test
+    void testUpdatePhotoData_NotFound() {
+        // Given
+        when(photoRepository.findById(photoId)).thenReturn(Optional.empty());
+
+        // When
+        Photo result = photoService.updatePhotoData(photoId, "Title", "Cat", "Desc", BigDecimal.TEN);
+
+        // Then
+        assertNull(result);
+        verify(photoRepository, times(1)).findById(photoId);
+        verify(photoRepository, never()).save(any(Photo.class));
+    }
+
+    @Test
+    void testUpdatePhotoFile_Success() {
+        // Given
+        String newFilename = "new-image.png";
+        when(photoRepository.findById(photoId)).thenReturn(Optional.of(samplePhoto));
+
+        // When
+        photoService.updatePhotoFile(photoId, newFilename);
+
+        // Then
+        assertEquals(newFilename, samplePhoto.getFilename());
+        verify(photoRepository, times(1)).findById(photoId);
+        verify(photoRepository, times(1)).save(samplePhoto);
+    }
+
+    @Test
+    void testUpdatePhotoFile_NotFound() {
+        // Given
+        when(photoRepository.findById(photoId)).thenReturn(Optional.empty());
+
+        // When
+        photoService.updatePhotoFile(photoId, "new.jpg");
+
+        // Then
+        verify(photoRepository, times(1)).findById(photoId);
+        verify(photoRepository, never()).save(any(Photo.class));
+    }
+
+    @Test
+    void testDeletePhoto() {
+        // When
+        photoService.deletePhoto(photoId);
 
         // Then
         verify(photoRepository, times(1)).deleteById(photoId);
+    }
+
+    @Test
+    void testGetChartData() {
+        // Given
+        List<Object[]> mockChartData = new ArrayList<>();
+        mockChartData.add(new Object[]{"Nature", 5L});
+        mockChartData.add(new Object[]{"Urban", 3L});
+        
+        when(photoRepository.countPhotosByCategory(userId)).thenReturn(mockChartData);
+
+        // When
+        List<Object[]> result = photoService.getChartData(userId);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Nature", result.get(0)[0]);
+        assertEquals(5L, result.get(0)[1]);
+        
+        verify(photoRepository, times(1)).countPhotosByCategory(userId);
     }
 }

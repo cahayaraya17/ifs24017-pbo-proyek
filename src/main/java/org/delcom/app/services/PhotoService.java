@@ -59,4 +59,4 @@ public class PhotoService {
     public List<Object[]> getChartData(UUID userId) {
         return photoRepository.countPhotosByCategory(userId);
     }
-}
+}   
