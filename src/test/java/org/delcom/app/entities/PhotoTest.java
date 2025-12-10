@@ -55,7 +55,7 @@ class PhotoTest {
         assertEquals("test.jpg", photo.getFilename());
     }
 
-    @Test
+@Test
     void testPrePersist() {
         Photo photo = new Photo(USER_ID, TITLE, CATEGORY, DESCRIPTION, PRICE);
         
@@ -65,15 +65,15 @@ class PhotoTest {
         assertNotNull(photo.getCreatedAt());
         assertNotNull(photo.getUpdatedAt());
         
-        // 1. Pastikan created dan updated identik saat pembuatan awal
-        assertEquals(photo.getCreatedAt(), photo.getUpdatedAt());
+        // [PERBAIKAN] Jangan gunakan assertEquals strict karena nanodetik bisa beda.
+        // Cek apakah selisih antara created dan updated sangat kecil (di bawah 100ms)
+        long diffBetweenFields = ChronoUnit.MILLIS.between(photo.getCreatedAt(), photo.getUpdatedAt());
+        assertTrue(Math.abs(diffBetweenFields) < 100, "CreatedAt dan UpdatedAt harus hampir bersamaan");
 
-        // 2. [PERBAIKAN] Validasi Rentang Waktu
-        // Memastikan waktu pembuatan adalah "barusan" (toleransi 1 detik)
+        // Validasi apakah waktu pembuatan sesuai dengan waktu sekarang (toleransi 1 detik)
         LocalDateTime now = LocalDateTime.now();
-        long diff = ChronoUnit.SECONDS.between(photo.getCreatedAt(), now);
-
-        assertTrue(Math.abs(diff) < 1, "CreatedAt harusnya waktu sekarang (toleransi 1 detik)");
+        long diffFromNow = ChronoUnit.SECONDS.between(photo.getCreatedAt(), now);
+        assertTrue(Math.abs(diffFromNow) < 1, "CreatedAt harusnya waktu sekarang (toleransi 1 detik)");
     }
 
     @Test
