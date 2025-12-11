@@ -4,65 +4,204 @@
       layout:decorate="~{layout/main}">
 <head>
     <title>Masuk - PixelGallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        /* --- Setup Global Background agar serasi --- */
+        body {
+            background: linear-gradient(135deg, #E8DFD8 0%, #DBC8BC 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-wrapper {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        /* --- Styling Kartu (Warna #CFAB8D) --- */
+        .login-card {
+            background-color: #ffefe2; /* Warna Request User */
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(90, 70, 56, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Border halus */
+            padding: 2rem;
+            color: #5A4638; /* Warna teks utama cokelat tua */
+        }
+
+        /* --- Styling Kotak Ikon (Cokelat Tua) --- */
+        .login-icon-box {
+            background-color: #5A4638; /* Diganti dari Ungu ke Cokelat */
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 4px 15px rgba(90, 70, 56, 0.3);
+            transform: rotate(-5deg); /* Sedikit miring untuk estetika */
+        }
+
+        .login-icon-box i {
+            font-size: 2rem;
+            color: #ffffff;
+            transform: rotate(5deg); /* Icon tegak lurus */
+        }
+
+        /* --- Label Form --- */
+        .form-label-custom {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #5A4638; /* Cokelat tua */
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Input Form (Glass Effect) --- */
+        .form-control-custom {
+            background-color: rgba(255, 255, 255, 0.5); /* Semi transparan */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            color: #5A4638;
+            transition: all 0.3s;
+        }
+        
+        .form-control-custom:focus {
+            background-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 0 4px rgba(90, 70, 56, 0.15);
+            border-color: #5A4638;
+            outline: none;
+        }
+
+        .form-control-custom::placeholder {
+            color: #8C7B70;
+            opacity: 0.8;
+        }
+
+        /* Input Group Text (Icon mata) */
+        .input-group-text-custom {
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            color: #5A4638;
+        }
+
+        /* --- Tombol Masuk (Gradient Cokelat) --- */
+        .btn-login-custom {
+            background: linear-gradient(90deg, #7D6356 0%, #5D4037 100%);
+            color: white;
+            font-weight: 600;
+            padding: 0.8rem;
+            border-radius: 50px; /* Rounded pill */
+            border: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(93, 64, 55, 0.2);
+        }
+
+        .btn-login-custom:hover {
+            background: linear-gradient(90deg, #8D6E63 0%, #6D4C41 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(93, 64, 55, 0.3);
+        }
+
+        /* Link Custom */
+        .text-link-custom {
+            color: #5A4638;
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+        
+        .text-link-custom:hover {
+            color: #3E2723;
+        }
+        
+        .form-check-input:checked {
+            background-color: #5A4638;
+            border-color: #5A4638;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row justify-content-center mt-5">
+    
+    <div class="container login-wrapper">
         <div class="col-md-5 col-lg-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
+            
+            <div class="card login-card">
+                <div class="card-body">
+                    
                     <div class="text-center mb-4">
-                        <i class="bi bi-camera-fill text-primary" style="font-size: 3rem;"></i>
-                        <h4 class="mt-2 fw-bold">Selamat Datang</h4>
-                        <p class="text-muted small">Masuk ke PixelGallery</p>
+                        <div class="login-icon-box">
+                            <i class="bi bi-camera-fill"></i>
+                        </div>
+                        
+                        <h4 class="fw-bold mb-1">Selamat Datang</h4>
+                        <p class="small opacity-75">Masuk untuk mengelola Lite Picture</p>
                     </div>
 
                     <form th:action="@{/auth/login/post}" method="post" th:object="${loginForm}">
                         
-                        <!-- Alert Error Global -->
-                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger text-center small">
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger border-0 bg-white bg-opacity-75 text-danger text-center small py-2 mb-3 shadow-sm" style="border-radius: 10px;">
                             <span th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
                         </div>
                         
-                        <!-- Alert Sukses (dari Register) -->
-                        <div th:if="${success}" class="alert alert-success text-center small" th:text="${success}"></div>
+                        <div th:if="${success}" class="alert alert-success border-0 bg-white bg-opacity-75 text-success text-center small py-2 mb-3 shadow-sm" style="border-radius: 10px;" th:text="${success}"></div>
 
-                        <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label small text-uppercase fw-bold text-muted">Email</label>
-                            <input type="email" class="form-control" id="email" th:field="*{email}" 
-                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="nama@email.com">
-                            <div class="invalid-feedback" th:errors="*{email}"></div>
+                            <label for="email" class="form-label form-label-custom">Email</label>
+                            <input type="email" class="form-control form-control-custom" id="email" th:field="*{email}" 
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" 
+                                   placeholder="nama@email.com">
+                            <div class="invalid-feedback text-white fw-bold" th:errors="*{email}"></div>
                         </div>
 
-                        <!-- Password -->
                         <div class="mb-3">
-                            <label for="password" class="form-label small text-uppercase fw-bold text-muted">Kata Sandi</label>
-                            <input type="password" class="form-control" id="password" th:field="*{password}"
-                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="******">
-                            <div class="invalid-feedback" th:errors="*{password}"></div>
+                            <label for="password" class="form-label form-label-custom">Kata Sandi</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control form-control-custom border-end-0" id="password" th:field="*{password}"
+                                       style="border-top-right-radius: 0; border-bottom-right-radius: 0;"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" 
+                                       placeholder="******">
+                                <span class="input-group-text input-group-text-custom">
+                                    <i class="bi bi-eye"></i>
+                                </span>
+                                <div class="invalid-feedback text-white fw-bold" th:errors="*{password}"></div>
+                            </div>
                         </div>
 
-                        <!-- Remember Me -->
-                        <div class="mb-3 form-check">
+                        <div class="mb-4 form-check">
                             <input type="checkbox" class="form-check-input" id="rememberMe" th:field="*{rememberMe}">
-                            <label class="form-check-label small" for="rememberMe">Ingat saya</label>
+                            <label class="form-check-label small" for="rememberMe" style="color: #5A4638;">Ingat saya</label>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary fw-bold">Masuk</button>
+                            <button type="submit" class="btn btn-login-custom">
+                                Masuk <i class="bi bi-arrow-right-short"></i>
+                            </button>
                         </div>
                     </form>
 
-                    <hr class="my-4">
-                    
-                    <div class="text-center small">
-                        Belum punya akun? <a th:href="@{/auth/register}" class="text-decoration-none fw-bold">Daftar sekarang</a>
+                    <div class="text-center mt-4 small">
+                        Belum punya akun? <a th:href="@{/auth/register}" class="text-link-custom">Daftar sekarang</a>
                     </div>
+                    
                 </div>
             </div>
+            
         </div>
     </div>
+    
 </div>
 </body>
 </html>

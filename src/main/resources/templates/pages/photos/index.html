@@ -1,56 +1,234 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/main}">
 <head>
-    <title>PixelGallery - Portofolio Saya</title>
+    <title>Galeri Saya - PixelGallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        /* --- CSS Variables & Global Styles (Sama dengan Dashboard) --- */
+        :root {
+            --bg-color: #E8DFD8;
+            --text-primary: #5A4638;
+            --text-secondary: #8C7B70;
+            --accent-color: #A68B7C;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --card-hover-bg: rgba(255, 255, 255, 0.65);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #E8DFD8 0%, #DBC8BC 100%);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+        }
+
+        /* --- Glassmorphism Card Style --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(90, 70, 56, 0.05);
+            transition: all 0.3s ease;
+            overflow: hidden; /* Supaya gambar mengikuti radius */
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: var(--card-hover-bg);
+            box-shadow: 0 12px 40px 0 rgba(90, 70, 56, 0.15);
+        }
+
+        /* --- Button Styles --- */
+        .btn-theme-primary {
+            background: linear-gradient(90deg, #7D6356 0%, #5D4037 100%);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(93, 64, 55, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .btn-theme-primary:hover {
+            transform: translateY(-2px);
+            color: #f0f0f0;
+        }
+
+        .btn-theme-secondary {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255,255,255, 0.6);
+            color: var(--text-primary);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-theme-secondary:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--text-primary);
+        }
+
+        /* Tombol Aksi Kecil (Edit/Delete) */
+        .btn-action-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.2s;
+            margin-left: 5px;
+        }
+
+        .btn-edit {
+            background: rgba(255, 193, 7, 0.2);
+            color: #d39e00;
+        }
+        .btn-edit:hover { background: rgba(255, 193, 7, 0.4); color: #856404; }
+
+        .btn-delete {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+        .btn-delete:hover { background: rgba(220, 53, 69, 0.3); color: #842029; }
+
+        /* --- Photo Card Specifics --- */
+        .photo-img-container {
+            padding: 12px 12px 0 12px; /* Memberi jarak agar gambar terlihat 'floating' */
+        }
+
+        .card-img-custom {
+            border-radius: 18px;
+            height: 250px;
+            width: 100%;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .badge-theme {
+            background-color: rgba(90, 70, 56, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(90, 70, 56, 0.1);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .price-tag {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 800;
+        }
+
+        /* --- Alert Styling --- */
+        .alert-theme {
+            background: rgba(209, 231, 221, 0.6);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: #0f5132;
+            border-radius: 15px;
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>PixelGallery</h1>
+<div layout:fragment="content" class="container py-5">
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+        <div class="mb-3 mb-md-0">
+            <h2 class="fw-bold display-6 mb-1">Galeri Saya</h2>
+            <p class="mb-0" style="color: var(--text-secondary);">Kelola koleksi foto terbaikmu</p>
+        </div>
+        
         <div>
-            <a th:href="@{/photos/chart}" class="btn btn-info me-2 text-white">
-                <i class="bi bi-pie-chart"></i> Statistik
+            <a th:href="@{/photos/chart}" class="btn btn-theme-secondary me-2">
+                <i class="bi bi-pie-chart me-1"></i> Statistik
             </a>
-            <a th:href="@{/photos/create}" class="btn btn-primary">
-                <i class="bi bi-plus-lg"></i> Upload Foto
+            <a th:href="@{/photos/create}" class="btn btn-theme-primary">
+                <i class="bi bi-plus-lg me-1"></i> Upload Foto
             </a>
         </div>
     </div>
 
-    <!-- Alert -->
-    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${success}" class="alert alert-theme mb-4 shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${success}">Berhasil!</span>
+    </div>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="photo : ${photos}">
-            <div class="card h-100 shadow-sm">
-                <!-- Fitur Tampilan Gambar di List -->
-                <img th:src="@{'/uploads/' + ${photo.filename}}" 
-                     class="card-img-top" alt="..." 
-                     style="height: 250px; object-fit: cover;">
+            <div class="card glass-card h-100 border-0">
+                
+                <div class="photo-img-container">
+                    <img th:src="@{'/uploads/' + ${photo.filename}}" 
+                         class="card-img-custom" 
+                         alt="Foto Portfolio">
+                </div>
                 
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${photo.title}">Title</h5>
-                    <span class="badge bg-secondary mb-2" th:text="${photo.category}">Category</span>
-                    <p class="card-text text-truncate" th:text="${photo.description}">Desc</p>
-                    <h6 class="text-success fw-bold">Rp <span th:text="${#numbers.formatDecimal(photo.price, 0, 'COMMA', 0, 'POINT')}"></span></h6>
-                </div>
-                
-                <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
-                    <a th:href="@{'/photos/' + ${photo.id}}" class="btn btn-outline-primary btn-sm">Detail</a>
-                    <div>
-                        <a th:href="@{'/photos/' + ${photo.id} + '/edit'}" class="btn btn-warning btn-sm">Ubah Info</a>
-                        <a th:href="@{'/photos/' + ${photo.id} + '/delete'}" 
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Yakin ingin menghapus foto ini?')">Hapus</a>
+                    <div class="mb-2">
+                        <span class="badge badge-theme text-uppercase" th:text="${photo.category}">CATEGORY</span>
+                    </div>
+
+                    <h5 class="card-title fw-bold text-truncate" th:text="${photo.title}">Title</h5>
+                    
+                    <p class="card-text text-truncate mb-3" 
+                       style="color: var(--text-secondary); font-size: 0.9rem;" 
+                       th:text="${photo.description}">Description goes here...</p>
+                    
+                    <div class="price-tag">
+                        Rp <span th:text="${#numbers.formatDecimal(photo.price, 0, 'COMMA', 0, 'POINT')}">0</span>
                     </div>
                 </div>
+                
+                <div class="card-footer bg-transparent border-0 pt-0 pb-4 d-flex justify-content-between align-items-center">
+                    <a th:href="@{'/photos/' + ${photo.id}}" class="btn btn-sm btn-outline-dark rounded-pill px-3" style="border-color: var(--text-primary); color: var(--text-primary);">
+                        Lihat Detail
+                    </a>
+
+                    <div>
+                        <a th:href="@{'/photos/' + ${photo.id} + '/edit'}" 
+                           class="btn-action-icon btn-edit" 
+                           title="Ubah Info">
+                            <i class="bi bi-pencil-fill" style="font-size: 0.9rem;"></i>
+                        </a>
+                        
+                        <a th:href="@{'/photos/' + ${photo.id} + '/delete'}" 
+                           class="btn-action-icon btn-delete" 
+                           onclick="return confirm('Yakin ingin menghapus foto ini?')"
+                           title="Hapus">
+                            <i class="bi bi-trash-fill" style="font-size: 0.9rem;"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
     
     <div th:if="${photos.isEmpty()}" class="text-center py-5">
-        <p class="text-muted">Belum ada karya yang diunggah.</p>
+        <div class="glass-card d-inline-block p-5">
+            <i class="bi bi-images mb-3 d-block" style="font-size: 3rem; color: var(--accent-color); opacity: 0.5;"></i>
+            <h5 class="fw-bold">Belum ada karya</h5>
+            <p class="text-muted mb-4">Mulai bangun portofoliomu sekarang.</p>
+            <a th:href="@{/photos/create}" class="btn btn-theme-primary btn-sm">
+                Upload Sekarang
+            </a>
+        </div>
     </div>
+
 </div>
 </body>
 </html>
